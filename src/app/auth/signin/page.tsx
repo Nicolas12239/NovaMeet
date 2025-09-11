@@ -29,12 +29,12 @@ export default function SignIn() {
       })
 
       if (result?.error) {
-        setError("Invalid credentials")
+        setError("Identifiants invalides")
       } else {
         router.push("/dashboard")
       }
     } catch (err) {
-      setError("Network error")
+      setError("Erreur réseau")
     } finally {
       setLoading(false)
     }

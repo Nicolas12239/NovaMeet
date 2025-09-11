@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
@@ -24,12 +26,12 @@ export default function CreateProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-pink-100 flex items-center justify-center">
+  <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-pink-100 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">Create Profile</h1>
+        <h1 className="text-2xl font-bold text-center mb-6">Créer un profil</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
             <input
               type="text"
               name="name"
@@ -51,7 +53,7 @@ export default function CreateProfile() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Localisation</label>
             <input
               type="text"
               name="location"
@@ -65,7 +67,7 @@ export default function CreateProfile() {
             type="submit"
             className="w-full bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 transition-colors"
           >
-            Create Profile
+            Créer le profil
           </button>
         </form>
       </div>
