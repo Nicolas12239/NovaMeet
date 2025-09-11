@@ -1,0 +1,169 @@
+// Prisma schema for NovaMeet+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  MOD
+  ADMIN
+}
+
+enum Status {
+  ACTIVE
+  SUSPENDED
+}
+
+enum KycStatus {
+  PENDING
+  VERIFIED
+  FAILED
+}
+
+enum Plan {
+  STANDARD
+  PREMIUM
+}
+
+enum SubStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+}
+
+enum PhotoStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum MessageStatus {
+  OK
+  FLAGGED
+}
+
+enum TargetType {
+  USER
+  PHOTO
+  MESSAGE
+}
+
+enum ReportStatus {
+  OPEN
+  IN_REVIEW
+  CLOSED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  phone        String?  @unique
+  passwordHash String
+  role         Role     @default(USER)
+  status       Status   @default(ACTIVE)
+  birthYear    Int
+  kycStatus    KycStatus @default(PENDING)
+  premiumUntil DateTime?
+  createdAt    DateTime @default(now())
+  city         String?
+  profile      Profile?
+  photos       Photo[]
+  subscriptions Subscription[]
+  sentMessages Message[] @relation("Sender")
+  reports      Report[]
+  moderationLogs ModerationLog[]
+  auditLogs    AuditLog[]
+  conversationsA Conversation[] @relation("UserA")
+  conversationsB Conversation[] @relation("UserB")
+}
+
+model Profile {
+  userId     String @id
+  nickname   String @unique
+  bio        String?
+  gender     String?
+  interests  Json?
+  city       String?
+  visibility Json?
+  user       User   @relation(fields: [userId], references: [id])
+}
+
+model Photo {
+  id       String @id @default(cuid())
+  userId   String
+  url      String
+  status   PhotoStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  user     User   @relation(fields: [userId], references: [id])
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  userId      String
+  plan        Plan
+  status      SubStatus @default(ACTIVE)
+  renewsAt    DateTime?
+  provider    String
+  providerRef String?
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Conversation {
+  id         String @id @default(cuid())
+  userA      String
+  userB      String
+  createdAt  DateTime @default(now())
+  lastMessageAt DateTime?
+  userA_rel  User @relation("UserA", fields: [userA], references: [id])
+  userB_rel  User @relation("UserB", fields: [userB], references: [id])
+  messages   Message[]
+}
+
+model Message {
+  id             String @id @default(cuid())
+  conversationId String
+  senderId       String
+  content        String
+  mediaUrl       String?
+  createdAt      DateTime @default(now())
+  status         MessageStatus @default(OK)
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  sender         User @relation("Sender", fields: [senderId], references: [id])
+}
+
+model Report {
+  id        String @id @default(cuid())
+  reporterId String
+  targetType TargetType
+  targetId  String
+  reason    String
+  createdAt DateTime @default(now())
+  status    ReportStatus @default(OPEN)
+  reporter  User @relation(fields: [reporterId], references: [id])
+}
+
+model ModerationLog {
+  id          String @id @default(cuid())
+  moderatorId String
+  action      String
+  targetType  TargetType
+  targetId    String
+  notes       String?
+  createdAt   DateTime @default(now())
+  moderator   User @relation(fields: [moderatorId], references: [id])
+}
+
+model AuditLog {
+  id        String @id @default(cuid())
+  actorId   String
+  eventType String
+  metadata  Json
+  createdAt DateTime @default(now())
+  actor     User @relation(fields: [actorId], references: [id])
+}
