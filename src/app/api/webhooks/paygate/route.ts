@@ -6,6 +6,22 @@ const PAYMENT_SUCCEEDED = "payment.succeeded"
 const PAYMENT_FAILED = "payment.failed"
 const SUBSCRIPTION_CANCELED = "subscription.canceled"
 
+interface PaymentSucceededData {
+  subscriptionId: string
+  userId: string
+  amount: number
+  currency: string
+}
+
+interface PaymentFailedData {
+  subscriptionId: string
+  reason: string
+}
+
+interface SubscriptionCanceledData {
+  subscriptionId: string
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -38,8 +54,8 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handlePaymentSucceeded(data: any) {
-  const { subscriptionId, userId, amount, currency } = data
+async function handlePaymentSucceeded(data: PaymentSucceededData) {
+  const { subscriptionId } = data
 
   // Find subscription by PayGate reference
   const subscription = await prisma.subscription.findFirst({
@@ -72,7 +88,7 @@ async function handlePaymentSucceeded(data: any) {
   console.log("Payment succeeded for user:", subscription.userId)
 }
 
-async function handlePaymentFailed(data: any) {
+async function handlePaymentFailed(data: PaymentFailedData) {
   const { subscriptionId, reason } = data
 
   const subscription = await prisma.subscription.findFirst({
@@ -93,7 +109,7 @@ async function handlePaymentFailed(data: any) {
   console.log("Payment failed for user:", subscription.userId, "Reason:", reason)
 }
 
-async function handleSubscriptionCanceled(data: any) {
+async function handleSubscriptionCanceled(data: SubscriptionCanceledData) {
   const { subscriptionId } = data
 
   const subscription = await prisma.subscription.findFirst({

@@ -1,4 +1,5 @@
 import { NextAuthOptions } from "next-auth"
+import Adapter from "next-auth/adapters"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "./prisma"
@@ -27,21 +28,22 @@ declare module "next-auth/jwt" {
 }
 
 export const authOptions: NextAuthOptions = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   adapter: PrismaAdapter(prisma) as any,
   providers: [
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        phone: { label: "Phone", type: "tel" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        if (!credentials?.phone || !credentials?.password) {
           return null
         }
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
+          where: { phone: credentials.phone }
         })
 
         if (!user) {

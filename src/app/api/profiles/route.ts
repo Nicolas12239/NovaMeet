@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { Prisma } from "@prisma/client"
 
 const createProfileSchema = z.object({
   nickname: z.string().min(3).max(50),
@@ -52,9 +53,9 @@ export async function POST(request: NextRequest) {
         nickname: validatedData.nickname,
         bio: validatedData.bio,
         gender: validatedData.gender,
-        interests: validatedData.interests ? JSON.stringify(validatedData.interests) : null,
         city: validatedData.city,
-        visibility: validatedData.visibility ? JSON.stringify(validatedData.visibility) : null,
+        interests: validatedData.interests ? JSON.parse(JSON.stringify(validatedData.interests)) : null,
+        visibility: validatedData.visibility ? JSON.parse(JSON.stringify(validatedData.visibility)) : null,
       },
     })
 
@@ -90,28 +91,28 @@ export async function GET(request: NextRequest) {
 
     const skip = (page - 1) * limit
 
-    const where: any = {
-      user: {
-        status: "ACTIVE",
-        kycStatus: "VERIFIED", // Only show verified users
-      },
+    const userWhere: Prisma.UserWhereInput = {
+      status: "ACTIVE",
+      kycStatus: "VERIFIED", // Only show verified users
+    }
+
+    if (minAge || maxAge) {
+      const birthYearFilter: { lte?: number, gte?: number } = {}
+      if (minAge) {
+        birthYearFilter.lte = new Date().getFullYear() - parseInt(minAge)
+      }
+      if (maxAge) {
+        birthYearFilter.gte = new Date().getFullYear() - parseInt(maxAge)
+      }
+      userWhere.birthYear = birthYearFilter
+    }
+
+    const where: Prisma.ProfileWhereInput = {
+      user: userWhere,
     }
 
     if (gender) where.gender = gender
     if (city) where.city = city
-
-    if (minAge || maxAge) {
-      where.user = {
-        ...where.user,
-        birthYear: {}
-      }
-      if (minAge) {
-        where.user.birthYear.lte = new Date().getFullYear() - parseInt(minAge)
-      }
-      if (maxAge) {
-        where.user.birthYear.gte = new Date().getFullYear() - parseInt(maxAge)
-      }
-    }
 
     const profiles = await prisma.profile.findMany({
       where,
@@ -130,7 +131,7 @@ export async function GET(request: NextRequest) {
       },
       skip,
       take: limit,
-      orderBy: { createdAt: "desc" }
+      orderBy: { user: { createdAt: "desc" } }
     })
 
     const total = await prisma.profile.count({ where })

@@ -1,28 +1,22 @@
-# Navigation Menu Enhancement Plan
+# TODO: Fix Code Errors
 
-## Current Status
-- [x] Analyze existing Navigation.tsx component
-- [x] Plan UI/UX improvements
-- [x] Get user confirmation
+## Errors to Fix
+- [x] Fix "any" types in src/app/api/conversations/route.ts (line 58)
+- [x] Fix "any" types in src/app/api/profiles/route.ts (line 93)
+- [x] Fix "any" types in src/app/api/reports/route.ts (lines 115, 130)
+- [x] Fix "any" types in src/app/api/webhooks/paygate/route.ts (lines 41, 75, 96)
+- [x] Fix "any" type in src/lib/auth.ts (line 30)
+- [x] Fix unescaped apostrophes in src/app/auth/signin/page.tsx (line 107)
+- [x] Fix unescaped apostrophes in src/app/page.tsx (lines 31, 225)
+- [x] Change require() to import in test-api.js (line 2)
 
-## Implementation Tasks
-- [x] Add more engaging animations and transitions for menu items
-- [x] Improve mobile menu with smoother animations
-- [x] Add subtle interactive elements (tooltips, badges)
-- [x] Refine color scheme and typography - Updated to pink and white only
-- [x] Add accessibility improvements (ARIA attributes, keyboard navigation)
-- [x] Add welcome message/user greeting for logged-in users
-- [x] Enhance hover effects and micro-interactions
-- [x] Add loading states and smooth transitions
-- [x] Add custom CSS animations and accessibility styles
-- [x] Update all colors to use only pink and white palette
-
-## Testing & Validation
-- [x] Test responsiveness on different screen sizes
-- [x] Verify dynamic behavior on scroll
-- [x] Check accessibility compliance
-- [x] Validate user experience improvements
-
-## Follow-up
-- [x] Review other related UI components if needed
-- [x] Optimize performance if necessary
+## Warnings to Fix (Optional)
+- [ ] Remove unused '_' in src/app/api/auth/register/route.ts (line 50)
+- [x] Remove unused 'request' in src/app/api/conversations/route.ts (line 6)
+- [ ] Remove unused 'userId', 'amount', 'currency' in src/app/api/webhooks/paygate/route.ts (line 42)
+- [ ] Remove unused 'err' in src/app/auth/signin/page.tsx (line 36)
+- [ ] Remove unused 'err' in src/app/auth/signup/page.tsx (line 52)
+- [ ] Remove unused 'CreditCard' in src/app/page.tsx (line 2)
+- [ ] Remove unused 'session' in src/app/profile/[id]/page.tsx (line 25)
+- [ ] Fix missing dependency in useEffect in src/app/profile/[id]/page.tsx (line 41)
+- [ ] Remove unused 'err' in src/app/profile/[id]/page.tsx (line 52)

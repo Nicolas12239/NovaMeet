@@ -22,23 +22,12 @@ interface Profile {
 }
 
 export default function ProfileDetail() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const router = useRouter()
   const params = useParams()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/auth/signin")
-      return
-    }
-
-    if (params.id) {
-      fetchProfile()
-    }
-  }, [status, params.id, router])
 
   const fetchProfile = async () => {
     try {
@@ -49,12 +38,23 @@ export default function ProfileDetail() {
       } else {
         setError("Profile not found")
       }
-    } catch (err) {
+    } catch {
       setError("Failed to load profile")
     } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/signin")
+      return
+    }
+
+    if (params.id) {
+      fetchProfile()
+    }
+  }, [status, params.id, router, fetchProfile])
 
   const calculateAge = (birthYear: number) => {
     return new Date().getFullYear() - birthYear

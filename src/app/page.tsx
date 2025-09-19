@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Heart, Shield, Users, CreditCard, CheckCircle, Sparkles } from "lucide-react"
+import { Heart, Shield, Users, CheckCircle, Sparkles } from "lucide-react"
 
 export default function Home() {
   return (
@@ -31,7 +31,7 @@ export default function Home() {
                 Commencer l'aventure
               </Link>
               <Link
-                href="/auth/signin"
+                href="/auth/signup"
                 className="bg-white text-pink-600 px-8 py-4 rounded-xl font-semibold border-2 border-pink-600 hover:bg-pink-50 transition-all duration-300 text-lg"
               >
                 Se connecter
@@ -222,10 +222,10 @@ export default function Home() {
       <section id="cta" className="py-20 bg-gradient-to-br from-pink-500 to-pink-700">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Prêt à trouver l'amour ?
+            Prêt à trouver l&apos;amour ?
           </h2>
           <p className="text-xl text-pink-100 mb-8 max-w-2xl mx-auto">
-            Rejoignez des milliers de célibataires qui ont trouvé leur âme sœur sur NovaMeet+
+            Rejoignez des milliers de célibataires qui ont trouvé leur &apos;âme sœur sur NovaMeet+
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

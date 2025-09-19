@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
-
 const reportSchema = z.object({
   targetType: z.enum(["USER", "PHOTO", "MESSAGE"]),
   targetId: z.string(),
@@ -112,7 +111,7 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit
 
     const reports = await prisma.report.findMany({
-      where: { status: status as any },
+      where: { status: status as "OPEN" | "IN_REVIEW" | "CLOSED" },
       include: {
         reporter: {
           select: {
@@ -127,7 +126,7 @@ export async function GET(request: NextRequest) {
     })
 
     const total = await prisma.report.count({
-      where: { status: status as any }
+      where: { status: status as "OPEN" | "IN_REVIEW" | "CLOSED" }
     })
 
     return NextResponse.json({

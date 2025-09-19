@@ -7,7 +7,7 @@ import Link from "next/link"
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
-    email: "",
+    phone: "",
     password: ""
   })
   const [loading, setLoading] = useState(false)
@@ -23,7 +23,7 @@ export default function SignIn() {
 
     try {
       const result = await signIn("credentials", {
-        email: formData.email,
+        phone: formData.phone,
         password: formData.password,
         redirect: false
       })
@@ -33,7 +33,7 @@ export default function SignIn() {
       } else {
         router.push("/dashboard")
       }
-    } catch (err) {
+    } catch {
       setError("Erreur réseau")
     } finally {
       setLoading(false)
@@ -50,7 +50,7 @@ export default function SignIn() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">Sign In</h1>
+        <h1 className="text-2xl font-bold text-center mb-6">Connexion</h1>
 
         {message && (
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
@@ -67,13 +67,13 @@ export default function SignIn() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-black mb-1">
-              Email
+              Phone
             </label>
             <input
-              type="email"
-              name="email"
+              type="tel"
+              name="phone"
               required
-              value={formData.email}
+              value={formData.phone}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-black"
             />
@@ -98,15 +98,15 @@ export default function SignIn() {
             disabled={loading}
             className="w-full bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 disabled:opacity-50"
           >
-            {loading ? "Signing In..." : "Sign In"}
+            {loading ? "Connexion en cours..." : "Se connecter"}
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">
-            Don't have an account?{" "}
+            Pas de compte ?{" "}
             <Link href="/auth/signup" className="text-pink-600 hover:text-pink-700">
-              Sign up
+              S&apos;inscrire
             </Link>
           </p>
         </div>
